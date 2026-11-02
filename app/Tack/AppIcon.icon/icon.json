@@ -1,0 +1,101 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : "system-light"
+    },
+    {
+      "appearance" : "dark",
+      "value" : "system-dark"
+    }
+  ],
+  "groups" : [
+    {
+      "hidden" : false,
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name" : "4_dent-rim.svg",
+          "name" : "4_dent-rim",
+          "opacity-specializations" : [
+            {
+              "value" : 0.8
+            },
+            {
+              "appearance" : "dark",
+              "value" : 0.7
+            }
+          ]
+        },
+        {
+          "glass" : true,
+          "image-name" : "3_dent.svg",
+          "name" : "3_dent",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.8
+            }
+          ]
+        },
+        {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "image-name" : "2_shoulder.svg",
+          "name" : "2_shoulder",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.8
+            }
+          ]
+        }
+      ],
+      "name" : "Dent",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.4
+      }
+    },
+    {
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill" : "automatic",
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "1_sphere.svg",
+          "name" : "1_sphere",
+          "opacity-specializations" : [
+            {
+              "value" : 0.7
+            },
+            {
+              "appearance" : "dark",
+              "value" : 0.8
+            }
+          ]
+        }
+      ],
+      "name" : "Sphere",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.6
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "macOS"
+    ]
+  }
+}

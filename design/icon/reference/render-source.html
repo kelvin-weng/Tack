@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html><head><style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const q = new URLSearchParams(location.search);
+const dark = q.get('bg') === 'dark';
+const view = q.get('view') || 'front';
+const S = 1024;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(S, S); renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+// Studio environment: big soft light sources -> broad highlights that wrap the dent
+const env = new THREE.Scene();
+const skyGeo = new THREE.SphereGeometry(20, 64, 32);
+const cols = []; const sp = skyGeo.attributes.position;
+for (let i = 0; i < sp.count; i++) { const y = sp.getY(i) / 20; const v = 0.22 + 0.55 * Math.max(0, y) + 0.08 * (1 + y);
+  cols.push(v, v * 1.02, v * 1.03); }
+skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+env.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+const box = (w, h, inten, x, y, z, tint = 0xffffff) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h),
+  new THREE.MeshBasicMaterial({ color: new THREE.Color(tint).multiplyScalar(inten), side: THREE.DoubleSide }));
+  m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
+box(9, 7, 6.0, -6, 8, 6);            // key softbox, upper-left front
+box(3, 10, 2.4, 9, 1, -3, 0xdffffd); // tall rim strip, right-back
+box(12, 3, 1.2, 0, -7, 5);           // low bounce card under the front
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.09).texture;  // blurred: no pinpoint focusing in the dent
+
+// Backdrop (stands in for the Icon Composer system background) + soft contact shadow
+const cv = document.createElement('canvas'); cv.width = cv.height = 1024;
+const g = cv.getContext('2d');
+const bg = g.createLinearGradient(0, 0, 0, 1024);
+if (dark) { bg.addColorStop(0, '#2a2d31'); bg.addColorStop(1, '#141517'); }
+else { bg.addColorStop(0, '#fbfcfc'); bg.addColorStop(1, '#e3e7e9'); }
+g.fillStyle = bg; g.fillRect(0, 0, 1024, 1024);
+const band = g.createRadialGradient(380, 300, 10, 380, 300, 420);
+band.addColorStop(0, dark ? 'rgba(80,90,100,.35)' : 'rgba(255,255,255,.9)'); band.addColorStop(1,'rgba(255,255,255,0)');
+g.fillStyle = band; g.fillRect(0,0,1024,1024);
+const sh = g.createRadialGradient(512, 600, 30, 512, 600, 260);
+sh.addColorStop(0, dark ? 'rgba(0,0,0,.55)' : 'rgba(0,70,68,.28)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+g.fillStyle = sh; g.save(); g.translate(512, 600); g.scale(1, .8); g.translate(-512, -600);
+g.fillRect(0, 0, 1024, 1024); g.restore();
+const ca = g.createRadialGradient(560, 640, 10, 560, 640, 170);
+ca.addColorStop(0, dark ? 'rgba(0,206,200,.35)' : 'rgba(0,226,220,.45)'); ca.addColorStop(1, 'rgba(0,206,200,0)');
+g.fillStyle = ca; g.save(); g.translate(560,640); g.scale(1.3,.75); g.translate(-560,-640); g.fillRect(0,0,1024,1024); g.restore();
+const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+backdrop.position.z = -2.2; scene.add(backdrop);
+
+// Sphere with a thumb dent
+const geo = new THREE.SphereGeometry(1, 512, 384);
+const pos = geo.attributes.position;
+const d = new THREE.Vector3(0.18, 0.30, 1).normalize();          // press direction (from viewer, slightly up-right)
+const t1 = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), d).normalize();
+const t2 = new THREE.Vector3().crossVectors(d, t1).normalize();
+const rot = -0.45;                                                  // thumb tilt
+const A = 0.62, B = 0.52;                                           // footprint half-angles (radians)
+const depth = 0.6, lip = 0.03;
+const n = new THREE.Vector3();
+for (let i = 0; i < pos.count; i++) {
+  n.fromBufferAttribute(pos, i).normalize();
+  const cosT = n.dot(d);
+  const theta = Math.acos(Math.min(1, Math.max(-1, cosT)));
+  let a = 0, b = 0;
+  if (theta > 1e-6) {
+    const px = n.dot(t1), py = n.dot(t2), l = Math.hypot(px, py) || 1;
+    const ux = px / l * theta, uy = py / l * theta;
+    a = ux * Math.cos(rot) - uy * Math.sin(rot);
+    b = ux * Math.sin(rot) + uy * Math.cos(rot);
+  }
+  // thumb is slightly wider at the tip end
+  const Aeff = A;
+  const e = Math.hypot(a / Aeff, b / B);
+  // Press along the thumb direction (not radially), so the floor stays broad instead of funnelling
+  const f = 0.6 * Math.exp(-e * e) + 0.4 * Math.exp(-e * e / 2.4);   // long, soft shoulder
+  const rimRoll = lip * Math.exp(-Math.pow((e - 1.9) / 0.7, 2));
+  const p = n.clone().multiplyScalar(1 + rimRoll).addScaledVector(d, -depth * f);
+  // malleable: squash along the press, bulge sideways (roughly volume-preserving)
+  // squished: flatten along the press, bulge out sideways (volume roughly kept)
+  const along = p.dot(d), SQ = 0.22;
+  const perp = p.clone().addScaledVector(d, -along);
+  p.copy(perp.multiplyScalar(1 + SQ * 0.55)).addScaledVector(d, along * (1 - SQ));
+  pos.setXYZ(i, p.x, p.y, p.z);
+}
+geo.computeVertexNormals();
+
+const mat = new THREE.MeshPhysicalMaterial({
+  color: new THREE.Color('#8AF6F1'),
+  metalness: 0, roughness: 0.05,
+  transmission: 1.0, thickness: 0.9, dispersion: 0.25, ior: 1.45,
+  attenuationColor: new THREE.Color('#00CEC8'), attenuationDistance: 5,
+  clearcoat: 1, clearcoatRoughness: 0.04,
+  specularIntensity: 1, envMapIntensity: 1.3,
+});
+if (q.get('opaque')) { mat.transmission = 0; }
+if (dark) { mat.transmission = 0.8; mat.emissive = new THREE.Color('#00CEC8'); mat.emissiveIntensity = 0.16; }
+const blob = new THREE.Mesh(geo, mat);
+blob.scale.setScalar(0.9);
+scene.add(blob);
+if (q.get('normals')) { blob.material = new THREE.MeshNormalMaterial(); }
+
+const key = new THREE.DirectionalLight(0xffffff, 1.2); key.position.set(-2.5, 3.5, 3); scene.add(key);
+const rim = new THREE.DirectionalLight(0xbffffc, 0.6); rim.position.set(2.5, -1, -2); scene.add(rim);
+scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+const cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+if (view === 'side') { cam.position.set(3.4, 1.8, 4.6); }
+else { cam.position.set(0, 0, 6.0); }
+cam.lookAt(0, view === 'side' ? 0 : 0.0, 0);
+if (view === 'side') { backdrop.lookAt(cam.position); backdrop.position.copy(cam.position).multiplyScalar(-0.55); backdrop.lookAt(cam.position); }
+
+renderer.render(scene, cam);
+window.__done = true;
+</script></body></html>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif">
+  <defs>
+    <radialGradient id="body" cx="38%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#B8F5EC" stop-opacity="0.92"/>
+      <stop offset="35%" stop-color="#4FD1BF" stop-opacity="0.72"/>
+      <stop offset="75%" stop-color="#1A9E90" stop-opacity="0.78"/>
+      <stop offset="100%" stop-color="#0B6F66" stop-opacity="0.9"/>
+    </radialGradient>
+    <radialGradient id="inner" cx="50%" cy="85%" r="60%">
+      <stop offset="0%" stop-color="#7FEADB" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#7FEADB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dent" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0A5E57" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#127F75" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#2BB3A2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="caustic" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5FE0CE" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#5FE0CE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bgLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFBFC"/>
+      <stop offset="100%" stop-color="#E3E8EC"/>
+    </linearGradient>
+    <linearGradient id="bgDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3038"/>
+      <stop offset="100%" stop-color="#111418"/>
+    </linearGradient>
+    <filter id="blur8" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="blur1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+    <clipPath id="blobClip">
+      <path d="M-84,10 C-88,-42 -46,-70 2,-68 C50,-70 88,-40 86,8 C88,50 46,72 0,70 C-46,72 -86,52 -84,10Z"/>
+    </clipPath>
+    <clipPath id="dentClip"><ellipse cx="8" cy="-6" rx="46" ry="34"/></clipPath>
+    <clipPath id="sq1"><rect x="40" y="30" width="260" height="260" rx="58"/></clipPath>
+    <clipPath id="sq2"><rect x="340" y="30" width="260" height="260" rx="58"/></clipPath>
+
+    <g id="blob">
+      <ellipse cx="4" cy="74" rx="82" ry="13" fill="#063F3A" opacity="0.35" filter="url(#blur8)"/>
+      <ellipse cx="4" cy="70" rx="58" ry="10" fill="url(#caustic)" filter="url(#blur3)"/>
+      <path d="M-84,10 C-88,-42 -46,-70 2,-68 C50,-70 88,-40 86,8 C88,50 46,72 0,70 C-46,72 -86,52 -84,10Z" fill="url(#body)"/>
+      <g clip-path="url(#blobClip)">
+        <ellipse cx="0" cy="55" rx="80" ry="30" fill="url(#inner)"/>
+        <path d="M-90,30 C-60,78 60,82 92,26 L92,90 L-90,90Z" fill="#0A5E57" opacity="0.25" filter="url(#blur3)"/>
+        <ellipse cx="8" cy="-6" rx="46" ry="34" fill="url(#dent)"/>
+        <path d="M-36,-26 C-24,-42 30,-44 50,-20" fill="none" stroke="#06463F" stroke-opacity="0.45" stroke-width="7" filter="url(#blur3)"/>
+        <path d="M-34,14 C-18,32 36,32 52,8" fill="none" stroke="#E6FFFB" stroke-opacity="0.7" stroke-width="3" filter="url(#blur1)"/>
+        <g clip-path="url(#dentClip)" fill="none" stroke="#0B5F58" stroke-opacity="0.2" stroke-width="1.3">
+          <ellipse cx="10" cy="-4" rx="38" ry="27"/>
+          <ellipse cx="10" cy="-4" rx="31" ry="22"/>
+          <ellipse cx="11" cy="-3" rx="24" ry="17"/>
+          <ellipse cx="11" cy="-3" rx="17" ry="12"/>
+          <ellipse cx="12" cy="-2" rx="10" ry="7"/>
+        </g>
+      </g>
+      <path d="M-84,10 C-88,-42 -46,-70 2,-68 C50,-70 88,-40 86,8 C88,50 46,72 0,70 C-46,72 -86,52 -84,10Z" fill="none" stroke="#0B6F66" stroke-opacity="0.4" stroke-width="1.5"/>
+      <ellipse cx="-46" cy="-40" rx="24" ry="10" fill="#FFFFFF" opacity="0.75" transform="rotate(-28 -46 -40)" filter="url(#blur1)"/>
+      <circle cx="-20" cy="-55" r="4" fill="#FFFFFF" opacity="0.9"/>
+      <path d="M58,40 C70,28 78,14 78,0" fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="3" stroke-linecap="round" filter="url(#blur1)"/>
+    </g>
+  </defs>
+
+  <rect x="40" y="30" width="260" height="260" rx="58" fill="url(#bgLight)" stroke="#D3D9DF" stroke-width="1"/>
+  <g clip-path="url(#sq1)" stroke="#9AA5B1" stroke-opacity="0.25" stroke-width="1.5">
+    <line x1="40" y1="110" x2="300" y2="110"/><line x1="40" y1="150" x2="300" y2="150"/>
+    <line x1="40" y1="190" x2="300" y2="190"/><line x1="40" y1="230" x2="300" y2="230"/>
+  </g>
+  <use href="#blob" transform="translate(170,158)"/>
+
+  <rect x="340" y="30" width="260" height="260" rx="58" fill="url(#bgDark)"/>
+  <g clip-path="url(#sq2)" stroke="#FFFFFF" stroke-opacity="0.07" stroke-width="1.5">
+    <line x1="340" y1="110" x2="600" y2="110"/><line x1="340" y1="150" x2="600" y2="150"/>
+    <line x1="340" y1="190" x2="600" y2="190"/><line x1="340" y1="230" x2="600" y2="230"/>
+  </g>
+  <use href="#blob" transform="translate(470,158)"/>
+
+  <text x="170" y="315" text-anchor="middle" font-size="13" fill="#8A939C">Light</text>
+  <text x="470" y="315" text-anchor="middle" font-size="13" fill="#8A939C">Dark</text>
+
+  <path d="M170,340 L470,340 L470,356 Q470,384 442,384 L198,384 Q170,384 170,356 Z" fill="#000"/>
+  <use href="#blob" transform="translate(204,360) scale(0.17)"/>
+  <text x="438" y="368" text-anchor="middle" font-size="15" font-weight="600" fill="#FFFFFF">2</text>
+  <text x="320" y="408" text-anchor="middle" font-size="12" fill="#8A939C">Notch, collapsed</text>
+</svg>
