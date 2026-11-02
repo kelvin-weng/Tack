@@ -1,17 +1,9 @@
 import SwiftUI
 
-/// Marks settings that exist in the requirements but arrive in a later milestone.
-private struct LaterCaption: View {
-    var body: some View {
-        Text("Coming in a later build")
-            .font(.caption)
-            .foregroundStyle(.secondary)
-    }
-}
-
 struct GeneralSettingsView: View {
     let launchAtLogin: LaunchAtLogin
     let hotKey: HotKey
+    @Bindable var updates: Updates
 
     var body: some View {
         Form {
@@ -36,11 +28,9 @@ struct GeneralSettingsView: View {
                 }
             }
             Section {
-                Toggle("Check for updates automatically", isOn: .constant(false))
-                Button("Check for Updates…") {}
-                LaterCaption()
+                Toggle("Check for updates automatically", isOn: $updates.checksAutomatically)
+                Button("Check for Updates…") { updates.check() }
             }
-            .disabled(true)
         }
         .formStyle(.grouped)
         .onAppear { launchAtLogin.refresh() }
@@ -110,7 +100,7 @@ struct HowTackWorksView: View {
                 Text("Tack has no Dock icon. If you quit it, open it again from your Applications folder or Spotlight, and Settings appears. To have it start with your Mac, turn on Open Tack at login in General.")
             }
             GuideSection("Privacy") {
-                Text("Tack only looks at windows you pin. Nothing is recorded or saved, nothing leaves your Mac, and there are no accounts or tracking.")
+                Text("Tack only looks at windows you pin. Nothing is recorded or saved, nothing leaves your Mac, and there are no accounts or tracking. Tack only goes online to check for updates, if you turn that on or choose Check for Updates.")
             }
         }
         .padding(20)

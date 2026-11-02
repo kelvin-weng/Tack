@@ -8,16 +8,19 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private let pinWindowMenu = NSMenu()
     private let openSettings: () -> Void
     private let openOnboarding: () -> Void
+    private let checkForUpdates: () -> Void
     private let togglePin: () -> Void
     private let permissions: Permissions
     private let pins: PinManager
     private let hotKey: HotKey
     private var candidates: [PinManager.Candidate] = []
 
-    init(openSettings: @escaping () -> Void, openOnboarding: @escaping () -> Void, togglePin: @escaping () -> Void,
+    init(openSettings: @escaping () -> Void, openOnboarding: @escaping () -> Void,
+         checkForUpdates: @escaping () -> Void, togglePin: @escaping () -> Void,
          permissions: Permissions, pins: PinManager, hotKey: HotKey) {
         self.openSettings = openSettings
         self.openOnboarding = openOnboarding
+        self.checkForUpdates = checkForUpdates
         self.togglePin = togglePin
         self.permissions = permissions
         self.pins = pins
@@ -86,6 +89,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         }
         menu.addItem(.separator())
         menu.addItem(item("Settings…", #selector(showSettings), key: ","))
+        menu.addItem(item("Check for Updates…", #selector(checkUpdates)))
         menu.addItem(item("Quit Tack", #selector(quit), key: "q"))
     }
 
@@ -194,6 +198,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     }
 
     @objc private func showSettings() { openSettings() }
+    @objc private func checkUpdates() { checkForUpdates() }
     @objc private func pinFrontWindow() { togglePin() }
     @objc private func unpinAll() { pins.unpinAll() }
     @objc private func showOnboarding() { openOnboarding() }

@@ -6,16 +6,18 @@ final class SettingsWindowController {
     private var window: NSWindow?
     private let launchAtLogin = LaunchAtLogin()
     private let hotKey: HotKey
+    private let updates: Updates
 
-    init(hotKey: HotKey) {
+    init(hotKey: HotKey, updates: Updates) {
         self.hotKey = hotKey
+        self.updates = updates
     }
 
     func show() {
         if window == nil {
             let tabs = NSTabViewController()
             tabs.tabStyle = .toolbar
-            tabs.addTabViewItem(tab("General", symbol: "gearshape", GeneralSettingsView(launchAtLogin: launchAtLogin, hotKey: hotKey)))
+            tabs.addTabViewItem(tab("General", symbol: "gearshape", GeneralSettingsView(launchAtLogin: launchAtLogin, hotKey: hotKey, updates: updates)))
             tabs.addTabViewItem(tab("Pins", symbol: "pin", PinsSettingsView()))
             tabs.addTabViewItem(tab("Guide", symbol: "questionmark.circle", HowTackWorksView(hotKey: hotKey)))
             tabs.addTabViewItem(tab("About", symbol: "info.circle", AboutView()))

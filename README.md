@@ -12,7 +12,7 @@ Requires macOS 26 (Tahoe) or later.
 - **Use pinned windows as normal.** Click a pin and you're using the real app: type, click, scroll, drag.
 - **Pins live in your notch.** Hover over the notch to see your pins, unpin them, jump to them or reorder them. On a Mac without a notch, the menu bar does the same.
 - **Move, resize and snap.** Drag a pin by its top edge, and let go near a screen edge or corner to snap it into place.
-- **Private by design.** No accounts, no tracking, no analytics. Nothing leaves your Mac.
+- **Private by design.** No accounts, no tracking, no analytics. Nothing leaves your Mac. Tack only goes online to check for updates, and only if you turn that on or choose Check for Updates.
 
 ## Install
 

@@ -3,7 +3,8 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root/app"
-xcodebuild -project Tack.xcodeproj -scheme Tack -configuration Release -derivedDataPath build build -quiet
+# The generic destination builds for both Apple and Intel chips, not just this Mac.
+xcodebuild -project Tack.xcodeproj -scheme Tack -configuration Release -destination "generic/platform=macOS" -derivedDataPath build build -quiet
 app="build/Build/Products/Release/Tack.app"
 version=$(defaults read "$PWD/$app/Contents/Info.plist" CFBundleShortVersionString)
 

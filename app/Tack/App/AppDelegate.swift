@@ -4,11 +4,12 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let permissions = Permissions()
     private let pins = PinManager()
+    private let updates = Updates()
     private var menuBar: MenuBarController?
     private lazy var hotKey = HotKey { [weak self] in self?.togglePin() }
     private var notch: NotchController?
     private lazy var onboarding = OnboardingWindowController(permissions: permissions, hotKey: hotKey)
-    private lazy var settings = SettingsWindowController(hotKey: hotKey)
+    private lazy var settings = SettingsWindowController(hotKey: hotKey, updates: updates)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         PinSettings.registerDefaults()
@@ -16,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menuBar = MenuBarController(
             openSettings: { [weak self] in self?.settings.show() },
             openOnboarding: { [weak self] in self?.onboarding.show() },
+            checkForUpdates: { [weak self] in self?.updates.check() },
             togglePin: { [weak self] in self?.togglePin() },
             permissions: permissions,
             pins: pins,
